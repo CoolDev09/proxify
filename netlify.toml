@@ -1,8 +1,27 @@
+# netlify.toml
+
+[build]
+  # Run your Remix build (which is defined in package.json)
+  command   = "npm run build"
+  # Adjust to wherever Remix outputs your static files
+  publish   = "public"
+  # Point Netlify at your Functions folder
+  functions = "netlify/functions"
 
 [functions]
+  # Use esbuild for zero-dep functions
   node_bundler = "esbuild"
 
 [[redirects]]
-from = "/proxy"
-to = "/.netlify/functions/proxy"
-status = 200
+  from   = "/proxy"
+  to     = "/.netlify/functions/proxy"
+  status = 200
+
+[[headers]]
+  # Apply these headers site-wide; narrow the path if needed
+  for = "/*"
+  [headers.values]
+    # Allow this site to be iframed by any origin (or replace * with your domain)
+    X-Frame-Options           = "ALLOWALL"
+    # Or more tightly: only allow specific parent domains
+    Content-Security-Policy   = "frame-ancestors 'self' https://your-embed-domain.com;"
